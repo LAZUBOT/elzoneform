@@ -10,81 +10,69 @@
 </head>
 <body>
   <div class="actions">
-    <button data-action="print"><i class="fas fa-print"></i> طباعة PDF</button>
-    <button data-action="save" class="btn-secondary"><i class="fas fa-save"></i> حفظ المسودة</button>
-    <button data-action="export" class="btn-secondary"><i class="fas fa-file-export"></i> تصدير JSON</button>
-    <button data-action="theme" id="themeBtn" class="btn-secondary"><i class="fas fa-moon"></i> الوضع الليلي</button>
-    <button data-action="reset" class="btn-danger"><i class="fas fa-trash"></i> مسح البيانات</button>
+    <button data-action="print"><i class="fas fa-print"></i> طباعة</button>
+    <button data-action="save" class="btn-secondary"><i class="fas fa-save"></i> حفظ</button>
+    <button data-action="export" class="btn-secondary"><i class="fas fa-file-export"></i> تصدير</button>
+    <button data-action="theme" id="themeBtn" class="btn-secondary"><i class="fas fa-moon"></i></button>
+    <button data-action="reset" class="btn-danger"><i class="fas fa-trash"></i></button>
   </div>
 
   <div class="container" id="printable-area">
     <div class="header">
-      <div class="logo">
-        <div class="logo-icon"><i class="fas fa-network-wired"></i></div>
+      <div class="brand-wrap">
+        <div class="brand-mark"><i class="fas fa-wave-square"></i></div>
         <div class="logo-text">
           <span class="brand">الوطني</span>
-          <span class="sub">من إيرثلنك - خدمات التوسعة</span>
+          <span class="sub">من إيرثلنك</span>
         </div>
-      </div>
-      <div class="meta-text">
-        رقم الاستمارة: <span id="form-id">---</span><br />
-        تاريخ الإنشاء: <span id="creation-date">---</span>
       </div>
     </div>
 
     <div class="title">استمارة طلب توسعة صندوق توزيع (موزع) - إضافة عمود</div>
 
-    <div class="section-title">
-      توسعة صندوق التوزيع:
-      <button class="btn-add" data-action="add-expansion"><i class="fas fa-plus"></i> إضافة حقل</button>
-    </div>
+    <div class="section-title">توسعة صندوق التوزيع:</div>
     <table id="expansion-table">
       <thead>
         <tr>
-          <th style="width: 50px">#</th>
-          <th>الزون</th>
-          <th>المقاول</th>
-          <th>FatName</th>
+          <th>رمز الكابينة</th>
+          <th>رقم الـ FAT</th>
           <th>عدد الكيبلات الشريطية</th>
           <th>عدد المستخدمين</th>
-          <th class="btn-remove" style="width: 40px"></th>
+          <th class="btn-remove print-hidden" style="width: 40px"></th>
         </tr>
       </thead>
       <tbody></tbody>
     </table>
+    <button class="btn-add print-hidden" data-action="add-expansion"><i class="fas fa-plus"></i> إضافة حقل</button>
 
-    <div class="section-title">
-      إضافة عمود:
-      <button class="btn-add" data-action="add-pole"><i class="fas fa-plus"></i> إضافة حقل</button>
-    </div>
+    <div class="section-title">إضافة عمود:</div>
     <table id="pole-table">
       <thead>
         <tr>
-          <th style="width: 50px">#</th>
-          <th>الزون</th>
-          <th>المقاول</th>
+          <th>رمز الكابينة</th>
           <th>عدد المستخدمين</th>
           <th>احداثيات العمود</th>
-          <th class="btn-remove" style="width: 40px"></th>
+          <th class="btn-remove print-hidden" style="width: 40px"></th>
         </tr>
       </thead>
       <tbody></tbody>
     </table>
+    <button class="btn-add print-hidden" data-action="add-pole"><i class="fas fa-plus"></i> إضافة حقل</button>
 
     <div class="footer">
       <div class="block">
         <label>الوكيل:</label>
-        <div class="line"><input type="text" placeholder="..." /></div>
+        <div class="line"></div>
         <label>التاريخ:</label>
-        <div class="line"><input type="date" class="line-input" /></div>
+        <div class="line"></div>
         <label>التوقيع:</label>
         <div class="line"></div>
       </div>
       <div class="block">
         <label>موظف المبيعات:</label>
-        <div class="line"><input type="text" placeholder="..." /></div>
+        <div class="line"></div>
         <label>التاريخ:</label>
-        <div class="line"><input type="date" class="line-input" /></div>
+        <div class="line"></div>
         <label>التوقيع:</label>
         <div class="line"></div>
       </div>
