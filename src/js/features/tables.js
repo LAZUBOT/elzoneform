@@ -1,14 +1,27 @@
 import { APP_STATE, COORD_REGEX, TABLE_IDS } from '../core/constants.js';
 
+function escapeAttr(value = '') {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function safeText(value = '') {
+  return escapeAttr(String(value).trim());
+}
+
 function zoneOptionsMarkup(selectedValue = '') {
   return APP_STATE.zones
-    .map((zone) => `<option value="${zone.ZoneName}" ${selectedValue === zone.ZoneName ? 'selected' : ''}>${zone.ZoneName}</option>`)
+    .map((zone) => `<option value="${escapeAttr(zone.ZoneName)}" ${selectedValue === zone.ZoneName ? 'selected' : ''}>${escapeAttr(zone.ZoneName)}</option>`)
     .join('');
 }
 
 function fatOptionsMarkup(selectedValue = '') {
   return APP_STATE.fatNames
-    .map((fat) => `<option value="${fat}" ${selectedValue === fat ? 'selected' : ''}>${fat}</option>`)
+    .map((fat) => `<option value="${escapeAttr(fat)}" ${selectedValue === fat ? 'selected' : ''}>${escapeAttr(fat)}</option>`)
     .join('');
 }
 
@@ -75,15 +88,15 @@ export function addRow(tableId, data = {}) {
     tr.innerHTML = `
       <td><select class="zone-select">${zoneOptionsMarkup(selectedZone)}</select></td>
       <td><select>${fatOptionsMarkup(data.fat || APP_STATE.fatNames[0] || '')}</select></td>
-      <td><input type="number" value="${data.cables || ''}" /></td>
-      <td><input type="number" value="${data.users || ''}" /></td>
+      <td><input type="number" value="${safeText(data.cables || '')}" /></td>
+      <td><input type="number" value="${safeText(data.users || '')}" /></td>
       <td class="btn-remove print-hidden"><i class="fas fa-times row-remove" title="حذف"></i></td>
     `;
   } else {
     tr.innerHTML = `
       <td><select class="zone-select">${zoneOptionsMarkup(selectedZone)}</select></td>
-      <td><input type="number" value="${data.users || ''}" /></td>
-      <td><input type="text" value="${data.coords || ''}" placeholder="33.2, 44.1" /></td>
+      <td><input type="number" value="${safeText(data.users || '')}" /></td>
+      <td><input type="text" value="${safeText(data.coords || '')}" placeholder="33.2, 44.1" /></td>
       <td class="btn-remove print-hidden"><i class="fas fa-times row-remove" title="حذف"></i></td>
     `;
   }
