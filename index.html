@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>استمارة طلب توسعة الشبكة - الوطني</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Tajawal:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="./src/css/styles.css" />
+</head>
+<body>
+  <div class="actions">
+    <button data-action="print"><i class="fas fa-print"></i> طباعة</button>
+    <button data-action="save" class="btn-secondary"><i class="fas fa-save"></i> حفظ</button>
+    <button data-action="export" class="btn-secondary"><i class="fas fa-file-export"></i> تصدير</button>
+    <button data-action="theme" id="themeBtn" class="btn-secondary"><i class="fas fa-moon"></i></button>
+    <button data-action="reset" class="btn-danger"><i class="fas fa-trash"></i></button>
+  </div>
+
+  <div class="container" id="printable-area">
+    <div class="header">
+      <div class="meta-text">
+        رقم الاستمارة: <span id="form-id">---</span><br />
+        تاريخ الإنشاء: <span id="creation-date">---</span>
+      </div>
+      <div class="brand-wrap">
+        <img src="./src/css/img/logoalwatani.png" alt="الوطني" class="brand-logo" id="brand-logo" />
+        <span class="brand-fallback" id="brand-fallback">الوطني</span>
+      </div>
+    </div>
+
+    <div class="title">استمارة طلب توسعة صندوق توزيع (موزع) - إضافة عمود</div>
+
+    <div class="section-title">توسعة صندوق التوزيع:</div>
+    <table id="expansion-table">
+      <thead>
+        <tr>
+          <th>رمز الكابينة</th>
+          <th>رقم الـ FAT</th>
+          <th>عدد الكيبلات الشريطية</th>
+          <th>عدد المستخدمين</th>
+          <th class="btn-remove print-hidden" style="width: 36px"></th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <button class="btn-add print-hidden" data-action="add-expansion"><i class="fas fa-plus"></i> إضافة حقل</button>
+
+    <div class="section-title">إضافة عمود:</div>
+    <table id="pole-table">
+      <thead>
+        <tr>
+          <th>رمز الكابينة</th>
+          <th>عدد المستخدمين</th>
+          <th>احداثيات العمود</th>
+          <th class="btn-remove print-hidden" style="width: 36px"></th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <button class="btn-add print-hidden" data-action="add-pole"><i class="fas fa-plus"></i> إضافة حقل</button>
+
+    <div class="footer">
+      <div class="block">
+        <label>الوكيل:</label>
+        <div class="line"><input id="agent-name" type="text" readonly /></div>
+        <label>التاريخ:</label>
+        <div class="line"></div>
+        <label>التوقيع:</label>
+        <div class="line"></div>
+      </div>
+      <div class="block">
+        <label>موظف المبيعات:</label>
+        <div class="line"></div>
+        <label>التاريخ:</label>
+        <div class="line"></div>
+        <label>التوقيع:</label>
+        <div class="line"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="notification">تم الحفظ بنجاح</div>
+  <script type="module" src="./src/js/app.js"></script>
+</body>
+</html>
