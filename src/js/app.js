@@ -7,13 +7,13 @@ import { FAT_NAMES, buildZoneContractorMap, loadZones } from './data/zones.js';
 import { showNotification } from './ui/notifications.js';
 
 function initMetadata() {
-  const creationDate = new Date().toLocaleDateString('ar-EG');
-  const formId = `TEL-${Math.floor(Math.random() * 90000 + 10000)}`;
+  const creationDate = new Date().toLocaleDateString('en-US');
+  //const formId = `TEL-${Math.floor(Math.random() * 90000 + 10000)}`;
 
   document.getElementById('creation-date').textContent = creationDate;
-  document.getElementById('form-id').textContent = formId;
+  //document.getElementById('form-id').textContent = formId;
 
-  return { creationDate, formId };
+  return { creationDate };
 }
 
 function initDefaults() {
@@ -51,7 +51,7 @@ function hydrateFromStorage(defaultMeta) {
 
   const metadata = savedData.metadata || {};
   document.getElementById('creation-date').textContent = metadata.date || defaultMeta.creationDate;
-  document.getElementById('form-id').textContent = metadata.id || defaultMeta.formId;
+  //document.getElementById('form-id').textContent = metadata.id || defaultMeta.formId;
 
   const agentInput = document.getElementById('agent-name');
   if (agentInput && metadata.agent) {
