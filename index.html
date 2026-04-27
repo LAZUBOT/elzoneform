@@ -446,22 +446,59 @@
 
 
     // ==========================================
-    // 2. جلب وتجهيز البيانات (Data Fetching)
+    // 2. جلب وتجهيز البيانات (Data Fetching / Generation)
     // ==========================================
-    function buildZoneContractorMap(zones) {
-      return new Map(zones.map((zone) => [zone.ZoneName, zone.ZoneContractor]));
+    const ZoneContractor = {
+      alsultan: {ranges: [[7001]], name: 'AL-Sultan Compound'},
+      alfirdous: {ranges: [[7061]], name: 'Al-Firdous Complex'},
+      bayti: {ranges: [[7020]], name: 'Bayti compound'},
+      dreamcity: {ranges: [[7120]], name: 'Dream City'},
+      elsalah: {ranges: [[163, 167], [176, 177], [185, 187], [189, 190], [209, 211], [213, 215], [219], [283, 287], [296, 297], [304], [308, 312], [315]], name: 'EL-Salah aldin'},
+      englishv: {ranges: [[7010]], name: 'English Village'},
+      holandian: {ranges: [[7031]], name: 'Holandian Village'},
+      jawharat: {ranges: [[7071, 7072]], name: 'Jawharat Tikrit'},
+      tiba1: {ranges: [[7150]], name: 'Tiba 1'},
+      aryanm: {ranges: [[217], [220, 221], [226], [235, 237]], name: 'اريان مصطفى امين زنكنه'},
+      ismailq: {ranges: [[160]], name: 'اسماعيل قيس توفيق سلمان'},
+      husaina: {ranges: [[136], [140], [143], [155], [159], [162]], name: 'حسين عصام عمر قادر'},
+      khairallahj: {ranges: [[238], [241], [245], [247, 248]], name: 'خيرالله جهاد سليمان عبدالله'},
+      zaidh: {ranges: [[45, 46], [48], [51, 66], [68], [70], [72, 75], [77, 85], [87], [89, 97], [100, 102], [256]], name: 'زيد حاتم'},
+      saadibr: {ranges: [[1], [4], [18], [21, 23], [26], [33], [35, 36], [39, 43], [99], [103], [243], [246], [251]], name: 'سعد ابراهيم محمد عبدالله'},
+      sabahm: {ranges: [[305, 307]], name: 'صباح مثنى صباح'},
+      alihm: {ranges: [[157]], name: 'علي حسين محمد رشيد'},
+      alimk: {ranges: [[2, 3], [5], [7, 13], [16], [20], [25], [27], [29], [31], [34], [37, 38], [44], [98], [145, 146], [156], [158], [231, 233]], name: 'علي مخلد رديف طالب'},
+      ammart: {ranges: [[168, 175], [178, 184], [188], [191], [218], [222, 225], [227, 230], [234]], name: 'عمار ثامر حسن العاصي'},
+      ammarm: {ranges: [[239, 240], [242], [244], [249, 250], [252]], name: 'عمار مزاحم علوان حسين'},
+      ghasans: {ranges: [[129, 134], [137, 139], [141, 142], [144], [148, 153], [216]], name: 'غسان سلطان كلو جمعة'},
+      mohameedw: {ranges: [[154], [278, 282]], name: 'محمد وادي شكور محمد'},
+      nabilj: {ranges: [[128], [135], [147]], name: 'نبيل جاووش'},
+      honarn: {ranges: [[161]], name: 'هونر نامق محمود'},
+      yaserl: {ranges: [[192, 207]], name: 'ياسر لطيف عبد محمود'},
+    };
+
+    function generateZones() {
+      const generated = [];
+      for (const key in ZoneContractor) {
+        const contractor = ZoneContractor[key].name;
+        const ranges = ZoneContractor[key].ranges;
+        
+        for (const range of ranges) {
+          const start = range[0];
+          const end = range.length > 1 ? range[1] : range[0];
+          
+          for (let i = start; i <= end; i++) {
+            // توليد الاسم بصيغة FTK0001
+            const zoneName = `FTK${String(i).padStart(4, '0')}`;
+            generated.push({ ZoneName: zoneName, ZoneContractor: contractor });
+          }
+        }
+      }
+      // ترتيب أبجدي/رقمي للكابينات
+      return generated.sort((a, b) => a.ZoneName.localeCompare(b.ZoneName));
     }
 
-    async function loadZones() {
-      try {
-        const response = await fetch('https://raw.githubusercontent.com/LAZUBOT/elzoneform/run/src/js/data/zones.json');
-        if (!response.ok) throw new Error('فشل في جلب البيانات');
-        return await response.json();
-      } catch (error) {
-        console.error("Error loading zones:", error);
-        showNotification('تعذر جلب الكابينات من الخادم');
-        return [];
-      }
+    function buildZoneContractorMap(zones) {
+      return new Map(zones.map((zone) => [zone.ZoneName, zone.ZoneContractor]));
     }
 
 
@@ -828,7 +865,7 @@
 
     async function initSettings() {
       APP_STATE.fatNames = FAT_NAMES;
-      APP_STATE.zones = await loadZones();
+      APP_STATE.zones = generateZones();
       APP_STATE.zoneContractorMap = buildZoneContractorMap(APP_STATE.zones);
     }
 
