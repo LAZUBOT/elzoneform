@@ -52,11 +52,19 @@
            ========================================= */
         .container {
             width: min(210mm, 100%);
-            min-height: 297mm;
+            /* الحفاظ على نسبة وتناسب A4 لجميع الشاشات بدلاً من الارتفاع الثابت */
+            aspect-ratio: 210 / 297;
+            height: auto;
             background: #fff;
-            border: 1mm solid var(--blue);
-            padding: 8mm 8mm 10mm;
-            transition: background 0.3s, border-color 0.3s;
+            /* إضافة إطار جمالي مزدوج باللون الأزرق */
+            border: 2px solid var(--blue);
+            outline: 1px solid var(--blue);
+            outline-offset: -6px;
+            /* هوامش مرنة تصغر مع الشاشة للحفاظ على المحتوى بالداخل (تمت زيادتها قليلاً لتجنب الإطار الداخلي) */
+            padding: clamp(15px, 4vw, 12mm) clamp(15px, 4vw, 12mm) clamp(20px, 5vw, 15mm);
+            transition: background 0.3s, border-color 0.3s, outline-color 0.3s;
+            display: flex;
+            flex-direction: column;
         }
 
         .actions {
@@ -87,7 +95,7 @@
 
         .btn-secondary { background: #57667b; }
         .btn-danger { background: #d83a3a; }
-        .btn-add { background: var(--green); color: #00303d; font-weight: 700; margin-bottom: 12px; }
+        .btn-add { background: var(--green); color: #00303d; font-weight: 700; margin-bottom: clamp(6px, 1.5vw, 12px); }
 
         /* =========================================
            4. الترويسة والعناوين (Header & Typography)
@@ -96,44 +104,44 @@
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            margin-bottom: 15px; 
+            margin-bottom: clamp(10px, 2vw, 15px); 
             border-bottom: 2px solid var(--bg); 
-            padding-bottom: 10px; 
+            padding-bottom: clamp(5px, 1vw, 10px); 
         }
         
-        .meta-text { font-size: 13px; color: var(--text-gray); line-height: 1.8; font-weight: bold;}
+        .meta-text { font-size: clamp(10px, 1.5vw, 13px); color: var(--text-gray); line-height: 1.8; font-weight: bold;}
         .meta-text span { color: var(--blue); }
         
-        .brand-logo { width: 140px; max-width: 40vw; height: auto; object-fit: contain; }
-        .brand-fallback { font-size: 24px; font-weight: bold; color: var(--blue); display: none; }
+        .brand-logo { width: clamp(80px, 25vw, 140px); height: auto; object-fit: contain; }
+        .brand-fallback { font-size: clamp(16px, 3vw, 24px); font-weight: bold; color: var(--blue); display: none; }
 
         .title {
             text-align: center;
-            font-size: clamp(16px, 2.5vw, 24px);
+            font-size: clamp(13px, 2.8vw, 24px);
             color: var(--blue);
             font-weight: 700;
             border-bottom: 0.8mm solid #1794dc;
-            padding-bottom: 10px;
-            margin: 10px auto 20px;
+            padding-bottom: clamp(5px, 1.5vw, 10px);
+            margin: clamp(5px, 1.5vw, 10px) auto clamp(10px, 2.5vw, 20px);
         }
 
         .section-title {
             color: var(--blue);
-            font-size: clamp(14px, 2vw, 20px);
+            font-size: clamp(12px, 2vw, 20px);
             font-weight: 700;
-            margin: 15px 0 10px;
+            margin: clamp(8px, 2vw, 15px) 0 clamp(5px, 1.5vw, 10px);
         }
 
         /* =========================================
            5. الجداول (Tables)
            ========================================= */
-        table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: clamp(6px, 1.5vw, 10px); }
         th, td {
             border: 0.6mm solid var(--blue);
             text-align: center;
-            height: clamp(30px, 3.5vw, 40px);
-            padding: 3px 5px;
-            font-size: clamp(11px, 1.4vw, 15px);
+            height: clamp(24px, 4vw, 40px);
+            padding: 2px 4px;
+            font-size: clamp(9px, 1.8vw, 15px);
         }
 
         th { background: var(--green); color: #000; font-weight: 700; }
@@ -149,7 +157,7 @@
             color: inherit; 
         }
         
-        .btn-remove { cursor: pointer; color: #d83a3a; width: 36px; text-align: center;}
+        .btn-remove { cursor: pointer; color: #d83a3a; width: clamp(25px, 4vw, 36px); text-align: center;}
         .btn-remove i { pointer-events: none; }
 
         /* =========================================
@@ -159,9 +167,9 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-top: 30px;
-            gap: 20px;
-            padding: 15px;
+            margin-top: auto; /* يدفعه للأسفل */
+            gap: clamp(10px, 2.5vw, 20px);
+            padding: clamp(8px, 2vw, 15px);
             border-radius: 8px;
         }
 
@@ -169,24 +177,25 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: clamp(6px, 1.5vw, 10px);
         }
 
         .footer-row {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: clamp(5px, 1.5vw, 10px);
         }
 
         .footer label {
-            font-size: clamp(12px, 1.5vw, 16px);
+            font-size: clamp(10px, 2vw, 16px);
             font-weight: 700;
             color: var(--blue);
+            white-space: nowrap;
         }
 
         .footer .line {
             flex: 1;
-            min-height: 25px;
+            min-height: clamp(18px, 3vw, 25px);
             display: flex;
             align-items: flex-end;
             justify-content: center;
@@ -196,17 +205,17 @@
             width: 100%;
             border: none;
             background: transparent;
-            font-size: 15px;
-            padding: 4px 0;
+            font-size: clamp(11px, 2vw, 15px);
+            padding: 2px 0;
             outline: none;
             font-family: inherit;
             color: inherit;
             font-weight: bold;
         }
 
-        .signature-line { height: 40px; position: relative;}
-        .signature-image { max-height: 100%; max-width: 150px; object-fit: contain; }
-        .signature-fallback { font-family: 'Tajawal', cursive; font-size: 18px; color: var(--blue); display: none; }
+        .signature-line { height: clamp(30px, 5vw, 40px); position: relative; border-bottom: none !important;}
+        .signature-image { max-height: 100%; max-width: clamp(80px, 15vw, 150px); object-fit: contain; }
+        .signature-fallback { font-family: 'Tajawal', cursive; font-size: clamp(12px, 2.5vw, 18px); color: var(--blue); display: none; }
 
         /* =========================================
            7. الإشعارات والوضع الليلي (Utils & Dark Mode)
@@ -236,7 +245,7 @@
         body.dark .footer input, body.dark .footer label, body.dark .meta-text { color: #e5e7eb; }
 
         @media (max-width: 600px) {
-            .footer { flex-direction: column; gap: 20px; }
+            .footer { flex-direction: column; gap: 15px; }
             .footer .block { width: 100%; }
         }
         
@@ -245,14 +254,36 @@
            ========================================= */
         @page {
             size: A4 portrait;
-            margin: 8mm;
+            margin: 0 !important; /* إزالة هوامش المتصفح الافتراضية لمنع كسر الصفحة */
         }
 
         @media print {
-            body { background: #fff; padding: 0; color: #000; }
+            body { 
+                background: #fff; 
+                padding: 0; 
+                margin: 0;
+                color: #000; 
+                display: block;
+            }
             .actions, .print-hidden { display: none !important; }
-            .container { width: 100%; min-height: 281mm; margin: 0; box-shadow: none; border-width: 0.6mm;}
-            .footer { background: transparent; }
+            
+            .container { 
+                width: 210mm !important; 
+                height: 297mm !important; /* إجبار الحاوية لتكون بحجم صفحة A4 واحدة تماماً */
+                max-height: 297mm !important;
+                min-height: 297mm !important;
+                margin: 0 auto; 
+                box-shadow: none; 
+                border: 2px solid var(--blue) !important;
+                outline: 1px solid var(--blue) !important;
+                outline-offset: -6px !important;
+                padding: 12mm !important;
+                box-sizing: border-box;
+                page-break-after: avoid;
+                page-break-inside: avoid;
+            }
+
+            .footer { background: transparent; margin-top: auto; }
             
             /* إخفاء نصوص الخيارات الافتراضية (اختر الكابينة...) عند الطباعة */
             select:invalid { color: transparent !important; }
