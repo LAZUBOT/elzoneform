@@ -4,36 +4,314 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>استمارة طلب توسعة الشبكة - الوطني</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Tajawal:wght@400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <link rel="stylesheet" href="./src/css/styles.css" />
+  
+  <style>
+        /* =========================================
+           1. الخطوط والمتغيرات الأساسية (Variables)
+           ========================================= */
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap');
+
+        @font-face {
+            font-family: 'Lama Sans Bold Expanded';
+            src: local('Lama Sans Bold Expanded'), local('LamaSans-BoldExpanded'), url(https://raw.githubusercontent.com/LAZUBOT/elzoneform/refs/heads/run/src/fonts/LamaSans-BoldExpanded.woff) format('woff');
+            font-weight: 700;
+            font-style: normal;
+        }
+
+        :root {
+            --blue: #0047bb;
+            --green: #00cc99;
+            --bg: #efefef;
+            --text-dark: #111;
+            --text-gray: #3a4a65;
+        }
+
+        /* =========================================
+           2. الإعدادات العامة (Base & Reset)
+           ========================================= */
+        * { 
+            box-sizing: border-box; 
+            font-family: 'Lama Sans Bold Expanded', 'Tajawal', sans-serif; 
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            direction: rtl;
+            color: var(--text-dark);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 16px;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        /* =========================================
+           3. تخطيط الواجهة (Layout & Components)
+           ========================================= */
+        .container {
+            width: min(210mm, 100%);
+            min-height: 297mm;
+            background: #fff;
+            border: 1mm solid var(--blue);
+            padding: 8mm 8mm 10mm;
+            transition: background 0.3s, border-color 0.3s;
+        }
+
+        .actions {
+            width: min(210mm, 100%);
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            border: none;
+            border-radius: 4px;
+            padding: 8px 12px;
+            background: var(--blue);
+            color: #fff;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+            transition: opacity 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        button:hover { opacity: 0.85; }
+
+        .btn-secondary { background: #57667b; }
+        .btn-danger { background: #d83a3a; }
+        .btn-add { background: var(--green); color: #00303d; font-weight: 700; margin-bottom: 12px; }
+
+        /* =========================================
+           4. الترويسة والعناوين (Header & Typography)
+           ========================================= */
+        .header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 15px; 
+            border-bottom: 2px solid var(--bg); 
+            padding-bottom: 10px; 
+        }
+        
+        .meta-text { font-size: 13px; color: var(--text-gray); line-height: 1.8; font-weight: bold;}
+        .meta-text span { color: var(--blue); }
+        
+        .brand-logo { width: 140px; max-width: 40vw; height: auto; object-fit: contain; }
+        .brand-fallback { font-size: 24px; font-weight: bold; color: var(--blue); display: none; }
+
+        .title {
+            text-align: center;
+            font-size: clamp(16px, 2.5vw, 24px);
+            color: var(--blue);
+            font-weight: 700;
+            border-bottom: 0.8mm solid #1794dc;
+            padding-bottom: 10px;
+            margin: 10px auto 20px;
+        }
+
+        .section-title {
+            color: var(--blue);
+            font-size: clamp(14px, 2vw, 20px);
+            font-weight: 700;
+            margin: 15px 0 10px;
+        }
+
+        /* =========================================
+           5. الجداول (Tables)
+           ========================================= */
+        table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
+        th, td {
+            border: 0.6mm solid var(--blue);
+            text-align: center;
+            height: clamp(30px, 3.5vw, 40px);
+            padding: 3px 5px;
+            font-size: clamp(11px, 1.4vw, 15px);
+        }
+
+        th { background: var(--green); color: #000; font-weight: 700; }
+        td input, td select { 
+            width: 100%; 
+            height: 100%; 
+            border: none; 
+            text-align: center; 
+            background: transparent; 
+            font-size: inherit; 
+            outline: none; 
+            font-weight: bold; 
+            color: inherit; 
+        }
+        
+        .btn-remove { cursor: pointer; color: #d83a3a; width: 36px; text-align: center;}
+        .btn-remove i { pointer-events: none; }
+
+        /* =========================================
+           6. التذييل والتواقيع (Footer & Signatures)
+           ========================================= */
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-top: 30px;
+            gap: 20px;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .footer .block {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .footer-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer label {
+            font-size: clamp(12px, 1.5vw, 16px);
+            font-weight: 700;
+            color: var(--blue);
+        }
+
+        .footer .line {
+            flex: 1;
+            min-height: 25px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .footer input {
+            width: 100%;
+            border: none;
+            background: transparent;
+            font-size: 15px;
+            padding: 4px 0;
+            outline: none;
+            font-family: inherit;
+            color: inherit;
+            font-weight: bold;
+        }
+
+        .signature-line { height: 40px; position: relative;}
+        .signature-image { max-height: 100%; max-width: 150px; object-fit: contain; }
+        .signature-fallback { font-family: 'Tajawal', cursive; font-size: 18px; color: var(--blue); display: none; }
+
+        /* =========================================
+           7. الإشعارات والوضع الليلي (Utils & Dark Mode)
+           ========================================= */
+        #notification {
+            position: fixed;
+            top: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1f2937;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 24px;
+            display: none;
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            z-index: 9999;
+        }
+
+        body.dark { background: #111827; color: #e5e7eb; }
+        body.dark .container { background: #1f2937; border-color: #3b82f6; }
+        body.dark .title, body.dark .section-title { color: #60a5fa; }
+        body.dark th { background: #0d9488; color: #fff;}
+        body.dark td, body.dark th { border-color: #4b5563; }
+        body.dark .footer { background: rgba(0,0,0,0.2); }
+        body.dark .footer input, body.dark .footer label, body.dark .meta-text { color: #e5e7eb; }
+
+        @media (max-width: 600px) {
+            .footer { flex-direction: column; gap: 20px; }
+            .footer .block { width: 100%; }
+        }
+        
+        /* =========================================
+           8. إعدادات الطباعة (Print Styles)
+           ========================================= */
+        @page {
+            size: A4 portrait;
+            margin: 8mm;
+        }
+
+        @media print {
+            body { background: #fff; padding: 0; color: #000; }
+            .actions, .print-hidden { display: none !important; }
+            .container { width: 100%; min-height: 281mm; margin: 0; box-shadow: none; border-width: 0.6mm;}
+            .footer { background: transparent; }
+            
+            /* إخفاء نصوص الخيارات الافتراضية (اختر الكابينة...) عند الطباعة */
+            select:invalid { color: transparent !important; }
+            
+            /* إخفاء أسهم الأرقام والمتصفحات */
+            input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
+            }
+
+            select {
+                -moz-appearance: none;
+                -webkit-appearance: none;
+                appearance: none;
+                text-indent: 0.1px;
+                text-overflow: '';
+            }
+
+            input[type=number] {
+                appearance: none;
+                -moz-appearance: textfield;
+            }
+        }
+  </style>
 </head>
 <body>
+
+  <!-- =========================================
+       شريط الأدوات (الطباعة، الحفظ، التصدير)
+       ========================================= -->
   <div class="actions">
     <button data-action="print"><i class="fas fa-print"></i> طباعة</button>
-    <button data-action="save" class="btn-secondary"><i class="fas fa-save"></i> حفظ</button>
-    <button data-action="export" class="btn-secondary"><i class="fas fa-file-export"></i> تصدير</button>
-    <button data-action="theme" id="themeBtn" class="btn-secondary"><i class="fas fa-moon"></i></button>
-    <button data-action="reset" class="btn-danger"><i class="fas fa-trash"></i></button>
+    <button data-action="export-a4" class="btn-secondary"><i class="fas fa-file-pdf"></i> تصدير A4</button>
+    <button data-action="save" class="btn-secondary"><i class="fas fa-save"></i> حفظ المسودة</button>
+    <button data-action="export" class="btn-secondary"><i class="fas fa-file-export"></i> تصدير البيانات</button>
+    <button data-action="theme" id="themeBtn" class="btn-secondary" title="تغيير المظهر"><i class="fas fa-moon"></i></button>
+    <button data-action="reset" class="btn-danger" title="مسح الكل"><i class="fas fa-trash"></i></button>
   </div>
 
+  <!-- =========================================
+       الورقة القابلة للطباعة (الاستمارة)
+       ========================================= -->
   <div class="container" id="printable-area">
+    
+    <!-- الترويسة والشعار -->
     <div class="header">
-      <div class="meta-text">
-        رقم الاستمارة: <span id="form-id">---</span><br />
-        تاريخ الإنشاء: <span id="creation-date">---</span>
+      <div class="meta-text print-meta">
+        <div>تاريخ الإنشاء: <span id="creation-date">---</span></div>
       </div>
       <div class="brand-wrap">
-        <div class="brand-mark"><i class="fas fa-wave-square"></i></div>
-        <div class="logo-text">
-          <span class="brand">الوطني</span>
-          <span class="sub">من إيرثلنك</span>
-        </div>
+        <img src="https://raw.githubusercontent.com/LAZUBOT/elzoneform/refs/heads/run/src/img/logoalwatani.png" alt="الوطني" class="brand-logo" id="brand-logo" />
+        <span class="brand-fallback" id="brand-fallback">الوطني للإنترنت</span>
       </div>
     </div>
 
+    <!-- العنوان الرئيسي -->
     <div class="title">استمارة طلب توسعة صندوق توزيع (موزع) - إضافة عمود</div>
 
+    <!-- جدول توسعة الصندوق -->
     <div class="section-title">توسعة صندوق التوزيع:</div>
     <table id="expansion-table">
       <thead>
@@ -42,13 +320,14 @@
           <th>رقم الـ FAT</th>
           <th>عدد الكيبلات الشريطية</th>
           <th>عدد المستخدمين</th>
-          <th class="btn-remove print-hidden" style="width: 36px"></th>
+          <th class="btn-remove print-hidden">حذف</th>
         </tr>
       </thead>
       <tbody></tbody>
     </table>
-    <button class="btn-add print-hidden" data-action="add-expansion"><i class="fas fa-plus"></i> إضافة حقل</button>
+    <button class="btn-add print-hidden" data-action="add-expansion"><i class="fas fa-plus"></i> إضافة حقل جديد</button>
 
+    <!-- جدول إضافة عمود -->
     <div class="section-title">إضافة عمود:</div>
     <table id="pole-table">
       <thead>
@@ -56,34 +335,490 @@
           <th>رمز الكابينة</th>
           <th>عدد المستخدمين</th>
           <th>احداثيات العمود</th>
-          <th class="btn-remove print-hidden" style="width: 36px"></th>
+          <th class="btn-remove print-hidden">حذف</th>
         </tr>
       </thead>
       <tbody></tbody>
     </table>
-    <button class="btn-add print-hidden" data-action="add-pole"><i class="fas fa-plus"></i> إضافة حقل</button>
+    <button class="btn-add print-hidden" data-action="add-pole"><i class="fas fa-plus"></i> إضافة حقل جديد</button>
 
+    <!-- التذييل (التواقيع) -->
     <div class="footer">
       <div class="block">
-        <label>الوكيل:</label>
-        <div class="line"></div>
-        <label>التاريخ:</label>
-        <div class="line"></div>
-        <label>التوقيع:</label>
-        <div class="line"></div>
+        <div class="footer-row">
+          <label>الوكيل:</label>
+          <div class="line"><input id="agent-name" type="text" placeholder="يحدد تلقائياً أو أدخله يدوياً"/></div>
+        </div>
+        <div class="footer-row">
+          <label>التاريخ:</label>
+          <div class="line"><input id="agent-date" type="text" /></div>
+        </div>
+        <div class="footer-row">
+          <label>التوقيع:</label>
+          <div class="line signature-line">
+            <img id="agent-signature" class="signature-image" alt="توقيع الوكيل" style="display:none;" />
+            <span id="agent-signature-fallback" class="signature-fallback" style="display:inline-block;">---</span>
+          </div>
+        </div>
       </div>
+
       <div class="block">
-        <label>موظف المبيعات:</label>
-        <div class="line"></div>
-        <label>التاريخ:</label>
-        <div class="line"></div>
-        <label>التوقيع:</label>
-        <div class="line"></div>
+        <div class="footer-row">
+          <label>موظف المبيعات:</label>
+          <div class="line"><input id="sales-name" type="text" value="واثق زياد" placeholder="اسم موظف المبيعات" /></div>
+        </div>
+        <div class="footer-row">
+          <label>التاريخ:</label>
+          <div class="line"><input id="sales-date" type="text" /></div>
+        </div>
+        <div class="footer-row">
+          <label>التوقيع:</label>
+          <div class="line signature-line">
+            <img id="sales-signature" class="signature-image" alt="توقيع موظف المبيعات" src="https://raw.githubusercontent.com/LAZUBOT/elzoneform/run/src/img/sing/wz.png" />
+            <span id="sales-signature-fallback" class="signature-fallback" style="display:none;">واثق زياد</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-
+    
+  <!-- إشعار النظام -->
   <div id="notification">تم الحفظ بنجاح</div>
-  <script type="module" src="./src/js/app.js"></script>
+
+
+  <!-- =========================================
+       المنطق البرمجي (JavaScript)
+       ========================================= -->
+  <script>
+    // ==========================================
+    // 1. الثوابت وإدارة الحالة (Constants & State)
+    // ==========================================
+    const STORAGE_KEY = 'telecom_form_data';
+    const COORD_REGEX = /^-?\d+(\.\d+)?,\s*-?\d+(\.\d+)?$/;
+
+    const TABLE_IDS = {
+      expansion: 'expansion-table',
+      poles: 'pole-table'
+    };
+
+    const APP_STATE = {
+      zones: [],
+      zoneContractorMap: new Map(),
+      fatNames: []
+    };
+
+    const FAT_NAMES = Array.from({ length: 48 }, (_, index) => `FAT${index + 1}`);
+
+
+    // ==========================================
+    // 2. جلب وتجهيز البيانات (Data Fetching)
+    // ==========================================
+    function buildZoneContractorMap(zones) {
+      return new Map(zones.map((zone) => [zone.ZoneName, zone.ZoneContractor]));
+    }
+
+    async function loadZones() {
+      try {
+        const response = await fetch('https://raw.githubusercontent.com/LAZUBOT/elzoneform/run/src/js/data/zones.json');
+        if (!response.ok) throw new Error('فشل في جلب البيانات');
+        return await response.json();
+      } catch (error) {
+        console.error("Error loading zones:", error);
+        showNotification('تعذر جلب الكابينات من الخادم');
+        return [];
+      }
+    }
+
+
+    // ==========================================
+    // 3. أدوات واجهة المستخدم (UI Utilities)
+    // ==========================================
+    function showNotification(text) {
+      const el = document.getElementById('notification');
+      el.textContent = text;
+      el.style.display = 'block';
+      setTimeout(() => {
+        el.style.display = 'none';
+      }, 3000);
+    }
+
+    function confirmReset() {
+      const overlay = document.createElement('div');
+      overlay.style =
+        'position:fixed; inset:0; background:rgba(0,0,0,0.7); display:flex; align-items:center; justify-content:center; z-index:2000;';
+
+      overlay.innerHTML = `
+        <div style="background:white; padding:30px; border-radius:12px; text-align:center; max-width:350px;">
+          <h3 style="margin-bottom:10px; color:#1e293b">تأكيد المسح؟</h3>
+          <p style="color:#64748b; margin-bottom:25px;">سيتم حذف كافة البيانات المدخلة نهائياً من المتصفح.</p>
+          <div style="display:flex; gap:10px; justify-content:center">
+            <button type="button" data-role="cancel" class="btn-secondary">إلغاء</button>
+            <button type="button" data-role="final-reset" class="btn-danger">نعم، امسح الكل</button>
+          </div>
+        </div>
+      `;
+
+      document.body.appendChild(overlay);
+
+      overlay.querySelector('[data-role="cancel"]').onclick = () => overlay.remove();
+      overlay.querySelector('[data-role="final-reset"]').onclick = () => {
+        localStorage.removeItem(STORAGE_KEY);
+        location.reload();
+      };
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark');
+      const icon = document.querySelector('#themeBtn i');
+      icon.className = document.body.classList.contains('dark') ? 'fas fa-sun' : 'fas fa-moon';
+    }
+
+
+    // ==========================================
+    // 4. التخزين والتصدير (Storage & Export)
+    // ==========================================
+    function currentMeta() {
+      return {
+        date: document.getElementById('creation-date').textContent,
+        agent: document.getElementById('agent-name')?.value || ''
+      };
+    }
+
+    function collectTableData() {
+      const expansion = [];
+      const poles = [];
+
+      document.querySelectorAll(`#${TABLE_IDS.expansion} tbody tr`).forEach((row) => {
+        const zoneSelect = row.querySelector('select.zone-select');
+        const selects = row.querySelectorAll('select:not(.zone-select)');
+        const inputs = row.querySelectorAll('input');
+
+        expansion.push({
+          cab: zoneSelect.value,
+          fat: selects[0].value,
+          cables: inputs[0].value,
+          users: inputs[1].value
+        });
+      });
+
+      document.querySelectorAll(`#${TABLE_IDS.poles} tbody tr`).forEach((row) => {
+        const zoneSelect = row.querySelector('select.zone-select');
+        const inputs = row.querySelectorAll('input');
+
+        poles.push({
+          cab: zoneSelect.value,
+          users: inputs[0].value,
+          coords: inputs[1].value
+        });
+      });
+
+      return { expansion, poles };
+    }
+
+    function saveForm() {
+      const { expansion, poles } = collectTableData();
+      const payload = { expansion, poles, metadata: currentMeta() };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+      showNotification('تم حفظ المسودة في المتصفح');
+    }
+
+    function exportJSON() {
+      saveForm();
+      const rawData = localStorage.getItem(STORAGE_KEY);
+      if (!rawData) return;
+
+      const blob = new Blob([rawData], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `Telecom_Expansion_${new Date().toISOString().slice(0, 10)}.json`;
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function loadSavedForm() {
+      const rawData = localStorage.getItem(STORAGE_KEY);
+      try {
+        return rawData ? JSON.parse(rawData) : null;
+      } catch {
+        return null;
+      }
+    }
+
+
+    // ==========================================
+    // 5. بناء وإدارة الجداول (Table Management)
+    // ==========================================
+    function escapeAttr(value = '') {
+      return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function safeText(value = '') {
+      return escapeAttr(String(value).trim());
+    }
+
+    function zoneOptionsMarkup(selectedValue = '') {
+      let options = `<option value="" disabled ${!selectedValue ? 'selected' : ''}>اختر الكابينة...</option>`;
+      options += APP_STATE.zones
+        .map((zone) => `<option value="${escapeAttr(zone.ZoneName)}" ${selectedValue === zone.ZoneName ? 'selected' : ''}>${escapeAttr(zone.ZoneName)}</option>`)
+        .join('');
+      return options;
+    }
+
+    function fatOptionsMarkup(selectedValue = '') {
+      let options = `<option value="" disabled ${!selectedValue ? 'selected' : ''}>اختر الـ FAT...</option>`;
+      options += APP_STATE.fatNames
+        .map((fat) => `<option value="${escapeAttr(fat)}" ${selectedValue === fat ? 'selected' : ''}>${escapeAttr(fat)}</option>`)
+        .join('');
+      return options;
+    }
+
+    function removeRow(btnElement) {
+      btnElement.closest('tr').remove();
+    }
+
+    function addRow(tableId, data = {}) {
+      const tbody = document.querySelector(`#${tableId} tbody`);
+      const tr = document.createElement('tr');
+      const selectedZone = data.cab || '';
+
+      if (tableId === TABLE_IDS.expansion) {
+        tr.innerHTML = `
+          <td><select class="zone-select" required>${zoneOptionsMarkup(selectedZone)}</select></td>
+          <td><select required>${fatOptionsMarkup(data.fat || '')}</select></td>
+          <td><input type="number" value="${safeText(data.cables || '')}" /></td>
+          <td><input type="number" value="${safeText(data.users || '')}" /></td>
+          <td class="btn-remove print-hidden"><i class="fas fa-times row-remove" title="حذف"></i></td>
+        `;
+      } else {
+        tr.innerHTML = `
+          <td><select class="zone-select" required>${zoneOptionsMarkup(selectedZone)}</select></td>
+          <td><input type="number" value="${safeText(data.users || '')}" /></td>
+          <td><input type="text" value="${safeText(data.coords || '')}" placeholder="" /></td>
+          <td class="btn-remove print-hidden"><i class="fas fa-times row-remove" title="حذف"></i></td>
+        `;
+      }
+
+      tbody.appendChild(tr);
+      if (!document.getElementById('agent-name')?.value && selectedZone) {
+        syncAgentByZone(selectedZone);
+      }
+    }
+
+
+    // ==========================================
+    // 6. منطق الأعمال والمزامنة (Business Logic)
+    // ==========================================
+    function contractorForZone(zoneName) {
+      return APP_STATE.zoneContractorMap.get(zoneName) || '';
+    }
+
+    function setupSignatureImage(imgElement, fallbackElement, srcPath, fallbackText) {
+      if (!imgElement || !fallbackElement) return;
+      imgElement.style.display = 'block';
+      fallbackElement.style.display = 'none';
+      fallbackElement.textContent = fallbackText || '---';
+      imgElement.src = srcPath;
+      imgElement.onerror = () => {
+        imgElement.style.display = 'none';
+        fallbackElement.style.display = 'inline-block';
+      };
+    }
+
+    function syncAgentByZone(zoneName) {
+      if(!zoneName) return;
+      const contractor = contractorForZone(zoneName);
+      const agentInput = document.getElementById('agent-name');
+      const creationDate = document.getElementById('creation-date')?.textContent || '';
+      const agentDate = document.getElementById('agent-date');
+
+      if (agentInput && contractor) {
+        agentInput.value = contractor;
+        document.getElementById('agent-signature-fallback').textContent = contractor;
+      }
+      if (agentDate && !agentDate.value) {
+        agentDate.value = creationDate;
+      }
+
+      const encodedContractor = encodeURIComponent(contractor);
+      const agentSign = document.getElementById('agent-signature');
+      const agentSignFallback = document.getElementById('agent-signature-fallback');
+
+      if (contractor) {
+        setupSignatureImage(agentSign, agentSignFallback, `https://raw.githubusercontent.com/LAZUBOT/elzoneform/run/src/img/sing/${encodedContractor}.png`, contractor);
+      }
+    }
+
+    function validateCoord(input) {
+      const value = input.value.trim();
+      input.style.color = value && !COORD_REGEX.test(value) ? '#d83a3a' : 'inherit';
+    }
+
+
+    // ==========================================
+    // 7. ربط الأحداث والتهيئة (Events & Init)
+    // ==========================================
+    function bindTableEvents() {
+      document.addEventListener('click', (event) => {
+        const removeBtn = event.target.closest('td.btn-remove');
+        if (removeBtn) removeRow(removeBtn);
+      });
+
+      document.addEventListener('change', (event) => {
+        const zoneSelect = event.target.closest('select.zone-select');
+        if (zoneSelect) syncAgentByZone(zoneSelect.value);
+      });
+
+      document.addEventListener('input', (event) => {
+        const target = event.target;
+        if (target instanceof HTMLInputElement && target.closest(`#${TABLE_IDS.poles}`) && target.placeholder.includes('33.2')) {
+          validateCoord(target);
+        }
+      });
+    }
+
+    function bindDynamicSignatures() {
+      document.getElementById('agent-name').addEventListener('input', (e) => {
+        const fallback = document.getElementById('agent-signature-fallback');
+        const img = document.getElementById('agent-signature');
+        const val = e.target.value.trim();
+        if (val) {
+          setupSignatureImage(img, fallback, `https://raw.githubusercontent.com/LAZUBOT/elzoneform/run/src/img/sing/${encodeURIComponent(val)}.png`, val);
+        } else {
+          img.style.display = 'none';
+          fallback.style.display = 'inline-block';
+          fallback.textContent = '---';
+        }
+      });
+
+      document.getElementById('sales-name').addEventListener('input', (e) => {
+        const fallback = document.getElementById('sales-signature-fallback');
+        const img = document.getElementById('sales-signature');
+        const val = e.target.value.trim();
+        if (val) {
+          const src = val === 'واثق زياد' ? 'https://raw.githubusercontent.com/LAZUBOT/elzoneform/run/src/img/sing/wz.png' : `https://raw.githubusercontent.com/LAZUBOT/elzoneform/run/src/img/sing/${encodeURIComponent(val)}.png`;
+          setupSignatureImage(img, fallback, src, val);
+        } else {
+          img.style.display = 'none';
+          fallback.style.display = 'inline-block';
+          fallback.textContent = '---';
+        }
+      });
+      
+      const salesNameInput = document.getElementById('sales-name');
+      if(salesNameInput && salesNameInput.value === 'واثق زياد') {
+         setupSignatureImage(document.getElementById('sales-signature'), document.getElementById('sales-signature-fallback'), 'https://raw.githubusercontent.com/LAZUBOT/elzoneform/run/src/img/sing/wz.png', 'واثق زياد');
+      }
+    }
+
+    function bindActions() {
+      document.addEventListener('click', (event) => {
+        const button = event.target.closest('[data-action]');
+        if (!button) return;
+
+        switch (button.dataset.action) {
+          case 'print':
+          case 'export-a4': window.print(); break;
+          case 'save': saveForm(); break;
+          case 'export': exportJSON(); break;
+          case 'theme': toggleDarkMode(); break;
+          case 'reset': confirmReset(); break;
+          case 'add-expansion': addRow(TABLE_IDS.expansion); break;
+          case 'add-pole': addRow(TABLE_IDS.poles); break;
+        }
+      });
+    }
+
+    function bindLogoFallback() {
+      const logo = document.getElementById('brand-logo');
+      const fallback = document.getElementById('brand-fallback');
+      if (logo && fallback) {
+        logo.addEventListener('error', () => {
+          logo.style.display = 'none';
+          fallback.style.display = 'inline-block';
+        });
+      }
+    }
+
+    function initMetadata() {
+      const d = new Date();
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      const creationDate = `${year}/${month}/${day}`;
+
+      document.getElementById('creation-date').textContent = creationDate;
+
+      const agentDate = document.getElementById('agent-date');
+      const salesDate = document.getElementById('sales-date');
+      if(agentDate) agentDate.value = creationDate;
+      if(salesDate) salesDate.value = creationDate;
+
+      return { creationDate };
+    }
+
+    function hydrateFromStorage(defaultMeta) {
+      const savedData = loadSavedForm();
+      if (!savedData) {
+        addRow(TABLE_IDS.expansion);
+        addRow(TABLE_IDS.poles);
+        return;
+      }
+
+      if (Array.isArray(savedData.expansion) && savedData.expansion.length > 0) {
+        savedData.expansion.forEach((row) => addRow(TABLE_IDS.expansion, row));
+      } else {
+        addRow(TABLE_IDS.expansion);
+      }
+
+      if (Array.isArray(savedData.poles) && savedData.poles.length > 0) {
+        savedData.poles.forEach((row) => addRow(TABLE_IDS.poles, row));
+      } else {
+        addRow(TABLE_IDS.poles);
+      }
+
+      const metadata = savedData.metadata || {};
+      document.getElementById('creation-date').textContent = metadata.date || defaultMeta.creationDate;
+
+      const agentInput = document.getElementById('agent-name');
+      if (agentInput && metadata.agent) {
+        agentInput.value = metadata.agent;
+      }
+    }
+
+    async function initSettings() {
+      APP_STATE.fatNames = FAT_NAMES;
+      APP_STATE.zones = await loadZones();
+      APP_STATE.zoneContractorMap = buildZoneContractorMap(APP_STATE.zones);
+    }
+
+    // نقطة الانطلاق
+    window.addEventListener('DOMContentLoaded', async () => {
+      const defaults = initMetadata();
+
+      try {
+        await initSettings();
+        hydrateFromStorage(defaults);
+      } catch (error) {
+        showNotification('تعذر تحميل إعدادات المناطق');
+        addRow(TABLE_IDS.expansion);
+        addRow(TABLE_IDS.poles);
+      }
+
+      bindLogoFallback();
+      bindActions();
+      bindTableEvents();
+      bindDynamicSignatures();
+      
+      const defaultZone = document.querySelector('.zone-select')?.value;
+      if (defaultZone) syncAgentByZone(defaultZone);
+    });
+
+  </script>
 </body>
 </html>
