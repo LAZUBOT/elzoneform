@@ -258,29 +258,31 @@
         }
 
         @media print {
-            body { 
+            html, body { 
+                width: 100%;
+                height: 100%;
                 background: #fff; 
                 padding: 0; 
-                margin: 0;
+                margin: 0 !important;
                 color: #000; 
-                display: block;
             }
             .actions, .print-hidden { display: none !important; }
             
             .container { 
-                width: 210mm !important; 
-                height: 297mm !important; /* إجبار الحاوية لتكون بحجم صفحة A4 واحدة تماماً */
-                max-height: 297mm !important;
-                min-height: 297mm !important;
-                margin: 0 auto; 
+                width: 100% !important; 
+                height: 100% !important; 
+                max-width: none !important;
+                max-height: none !important;
+                min-height: auto !important;
+                margin: 0 !important; 
                 box-shadow: none; 
                 border: 2px solid var(--blue) !important;
                 outline: 1px solid var(--blue) !important;
                 outline-offset: -6px !important;
-                padding: 12mm !important;
-                box-sizing: border-box;
-                page-break-after: avoid;
-                page-break-inside: avoid;
+                padding: 10mm !important;
+                box-sizing: border-box !important;
+                page-break-after: avoid !important;
+                page-break-inside: avoid !important;
             }
 
             .footer { background: transparent; margin-top: auto; }
