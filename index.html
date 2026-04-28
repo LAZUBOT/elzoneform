@@ -51,20 +51,27 @@
            3. تخطيط الواجهة (Layout & Components)
            ========================================= */
         .container {
-            width: min(210mm, 100%);
-            /* الحفاظ على نسبة وتناسب A4 لجميع الشاشات بدلاً من الارتفاع الثابت */
-            aspect-ratio: 210 / 297;
+            width: 100%;
+            max-width: 210mm;
+            /* لضمان تناسق A4 على الشاشات الصغيرة مع السماح بالتمدد إذا زاد المحتوى */
+            min-height: 141.4vw; 
             height: auto;
             background: #fff;
             /* إضافة إطار جمالي مزدوج باللون الأزرق */
             border: 2px solid var(--blue);
             outline: 1px solid var(--blue);
             outline-offset: -6px;
-            /* هوامش مرنة تصغر مع الشاشة للحفاظ على المحتوى بالداخل (تمت زيادتها قليلاً لتجنب الإطار الداخلي) */
+            /* هوامش مرنة تصغر مع الشاشة للحفاظ على المحتوى بالداخل */
             padding: clamp(15px, 4vw, 12mm) clamp(15px, 4vw, 12mm) clamp(20px, 5vw, 15mm);
             transition: background 0.3s, border-color 0.3s, outline-color 0.3s;
             display: flex;
             flex-direction: column;
+        }
+        
+        @media (min-width: 210mm) {
+            .container {
+                min-height: 297mm;
+            }
         }
 
         .actions {
@@ -282,23 +289,24 @@
 
         @media print {
             html, body { 
-                width: 100%;
-                height: auto; /* تعديل لمنع الاقتصاص إذا كان المحتوى أطول */
-                background: #fff; 
-                padding: 0; 
+                width: 210mm !important;
+                height: 297mm !important; 
+                background: #fff !important; 
+                padding: 0 !important; 
                 margin: 0 !important;
-                color: #000; 
+                color: #000 !important; 
+                overflow: hidden !important; /* منع الصفحات الإضافية */
             }
             .actions, .print-hidden { display: none !important; }
             
             .container { 
-                width: 100% !important; 
-                height: auto !important; 
-                min-height: 297mm !important; /* يحافظ على شكل A4 على الأقل */
-                max-width: none !important;
-                max-height: none !important;
+                width: 210mm !important; 
+                height: 297mm !important; 
+                min-height: 297mm !important; 
+                max-width: 210mm !important;
+                max-height: 297mm !important;
                 margin: 0 !important; 
-                box-shadow: none; 
+                box-shadow: none !important; 
                 border: 2px solid var(--blue) !important;
                 outline: 1px solid var(--blue) !important;
                 outline-offset: -6px !important;
@@ -306,10 +314,26 @@
                 box-sizing: border-box !important;
                 page-break-after: avoid !important;
                 page-break-inside: avoid !important;
+                overflow: hidden !important; /* قص أي محتوى زائد للحفاظ على صفحة واحدة */
+                transform: none !important;
             }
 
-            th { background: var(--green); }
-
+            /* تثبيت أحجام الخطوط في الطباعة لضمان بقاء المحتوى داخل ورقة واحدة وعدم تأثره بحجم شاشة الهاتف */
+            .title { font-size: 20px !important; margin: 10px auto 15px !important; padding-bottom: 5px !important;}
+            .section-title { font-size: 16px !important; margin: 10px 0 5px !important; }
+            table { margin-bottom: 10px !important; }
+            th, td { height: 32px !important; font-size: 12px !important; padding: 2px !important; }
+            .header { margin-bottom: 10px !important; padding-bottom: 5px !important; }
+            .brand-logo { width: 120px !important; }
+            .meta-text { font-size: 12px !important; }
+            .footer { padding: 10px !important; gap: 15px !important; margin-top: auto !important;}
+            .footer label { font-size: 14px !important; }
+            .footer input { font-size: 14px !important; }
+            .signature-line { height: 40px !important; }
+            .signature-image { max-width: 120px !important; }
+            .signature-fallback { font-size: 16px !important; }
+            
+            th { background: var(--green) !important; color: #000 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             .footer { background: transparent; margin-top: auto; }
             
             /* إخفاء نصوص الخيارات الافتراضية (اختر الكابينة...) عند الطباعة */
@@ -509,8 +533,7 @@
       ammart: {ranges: [[168, 175], [178, 184], [188], [191], [218], [222, 225], [227, 230], [234]], name: 'JUQ4JUI5JUQ5JTg1JUQ4JUE3JUQ4JUIxJTIwJUQ4JUFCJUQ4JUE3JUQ5JTg1JUQ4JUIxJTIwJUQ4JUFEJUQ4JUIzJUQ5JTg2JTIwJUQ4JUE3JUQ5JTg0JUQ4JUI5JUQ4JUE3JUQ4JUI1JUQ5JThB'},
       ammarm: {ranges: [[239, 240], [242], [244], [249, 250], [252]], name: 'JUQ4JUI5JUQ5JTg1JUQ4JUE3JUQ4JUIxJTIwJUQ5JTg1JUQ4JUIyJUQ4JUE3JUQ4JUFEJUQ5JTg1JTIwJUQ4JUI5JUQ5JTg0JUQ5JTg4JUQ4JUE3JUQ5JTg2JTIwJUQ4JUFEJUQ4JUIzJUQ5JThBJUQ5JTg2'},
       ghasans: {ranges: [[129, 134], [137, 139], [141, 142], [144], [148, 153], [216]], name: 'JUQ4JUJBJUQ4JUIzJUQ4JUE3JUQ5JTg2JTIwJUQ4JUIzJUQ5JTg0JUQ4JUI3JUQ4JUE3JUQ5JTg2JTIwJUQ5JTgzJUQ5JTg0JUQ5JTg4JTIwJUQ4JUFDJUQ5JTg1JUQ4JUI5JUQ4JUE5'},
-      // تم إصلاح التشفير التالف هنا من JUQ5JTg8 إلى JUQ5JTg4
-      mohameedw: {ranges: [[154], [278, 282]], name: 'JUQ5JTg1JUQ4JUFEJUQ5JTg1JUQ4JUFGJTIwJUQ5JTg4JUQ4JUE3JUQ4JUFGJUQ5JThBJTIwJUQ4JUI0JUQ5JTgzJUQ5JTg4JUQ4JUIxJTIwJUQ5JTg1JUQ4JUFEJUQ5JTg1JUQ4JUFG'},
+      mohameedw: {ranges: [[154], [278, 282]], name: 'JUQ5JTg1JUQ4JUFEJUQ5JTg1JUQ4JUFGJTIwJUQ5JTg8JUQ4JUE3JUQ4JUFGJUQ5JThBJTIwJUQ4JUI0JUQ5JTgzJUQ5JTg4JUQ4JUIxJTIwJUQ5JTg1JUQ4JUFEJUQ5JTg1JUQ4JUFG'},
       nabilj: {ranges: [[128], [135], [147]], name: 'JUQ5JTg2JUQ4JUE4JUQ5JThBJUQ5JTg0JTIwJUQ4JUFDJUQ4JUE3JUQ5JTg4JUQ5JTg4JUQ4JUI0'},
       honarn: {ranges: [[161]], name: 'JUQ5JTg3JUQ5JTg4JUQ5JTg2JUQ4JUIxJTIwJUQ5JTg2JUQ4JUE3JUQ5JTg1JUQ5JTgyJTIwJUQ5JTg1JUQ4JUFEJUQ5JTg1JUQ5JTg4JUQ4JUFG'},
       yaserl: {ranges: [[192, 207]], name: 'JUQ5JThBJUQ4JUE3JUQ4JUIzJUQ4JUIxJTIwJUQ5JTg0JUQ4JUI3JUQ5JThBJUQ5JTgxJTIwJUQ4JUI5JUQ4JUE4JUQ4JUFGJTIwJUQ5JTg1JUQ4JUFEJUQ5JTg1JUQ5JTg4JUQ4JUFG'},
