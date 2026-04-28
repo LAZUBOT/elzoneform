@@ -14,7 +14,7 @@
 
         @font-face {
             font-family: 'Lama Sans Bold Expanded';
-            src: local('Lama Sans Bold Expanded'), local('LamaSans-BoldExpanded'), url(https://raw.githubusercontent.com/LAZUBOT/elzoneform/refs/heads/run/src/fonts/LamaSans-BoldExpanded.woff) format('woff');
+            src: local('Lama Sans Bold Expanded'), local('LamaSans-BoldExpanded'), url(https://raw.githubusercontent.com/LAZUBOT/elzoneform/refs/heads/print/src/fonts/LamaSans-BoldExpanded.woff) format('woff');
             font-weight: 700;
             font-style: normal;
         }
@@ -135,16 +135,37 @@
         /* =========================================
            5. الجداول (Tables)
            ========================================= */
-        table { width: 100%; border-collapse: collapse; margin-bottom: clamp(6px, 1.5vw, 10px); }
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-bottom: clamp(6px, 1.5vw, 10px); 
+            table-layout: fixed; /* توزيع العرض بدقة حسب النسب المحددة */
+        }
+        
         th, td {
             border: 0.6mm solid var(--blue);
             text-align: center;
             height: clamp(24px, 4vw, 40px);
             padding: 2px 4px;
             font-size: clamp(9px, 1.8vw, 15px);
+            word-wrap: break-word; /* منع خروج النصوص الطويلة */
         }
 
+        /* ضبط أحجام أعمدة جدول توسعة الصندوق (الأول والثاني أكبر) */
+        #expansion-table th:nth-child(1), #expansion-table td:nth-child(1) { width: 30%; }
+        #expansion-table th:nth-child(2), #expansion-table td:nth-child(2) { width: 20%; }
+        #expansion-table th:nth-child(3), #expansion-table td:nth-child(3) { width: 20%; }
+        #expansion-table th:nth-child(4), #expansion-table td:nth-child(4) { width: 20%; }
+        #expansion-table th:nth-child(5), #expansion-table td:nth-child(5) { width: 10%; } /* زر الحذف */
+
+        /* ضبط أحجام أعمدة جدول إضافة عمود */
+        #pole-table th:nth-child(1), #pole-table td:nth-child(1) { width: 30%; }
+        #pole-table th:nth-child(2), #pole-table td:nth-child(2) { width: 20%; }
+        #pole-table th:nth-child(3), #pole-table td:nth-child(3) { width: 40%; }
+        #pole-table th:nth-child(4), #pole-table td:nth-child(4) { width: 10%; } /* زر الحذف */
+
         th { background: var(--green); color: #000; font-weight: 700; }
+        
         td input, td select { 
             width: 100%; 
             height: 100%; 
@@ -157,7 +178,7 @@
             color: inherit; 
         }
         
-        .btn-remove { cursor: pointer; color: #d83a3a; width: clamp(25px, 4vw, 36px); text-align: center;}
+        .btn-remove { cursor: pointer; color: #d83a3a; text-align: center; }
         .btn-remove i { pointer-events: none; }
 
         /* =========================================
@@ -199,6 +220,7 @@
             display: flex;
             align-items: flex-end;
             justify-content: center;
+            border-bottom: 1px dashed var(--blue);
         }
 
         .footer input {
@@ -247,6 +269,7 @@
         @media (max-width: 600px) {
             .footer { flex-direction: column; gap: 15px; }
             .footer .block { width: 100%; }
+            th { background: var(--green); }
         }
         
         /* =========================================
@@ -260,7 +283,7 @@
         @media print {
             html, body { 
                 width: 100%;
-                height: 100%;
+                height: auto; /* تعديل لمنع الاقتصاص إذا كان المحتوى أطول */
                 background: #fff; 
                 padding: 0; 
                 margin: 0 !important;
@@ -270,10 +293,10 @@
             
             .container { 
                 width: 100% !important; 
-                height: 100% !important; 
+                height: auto !important; 
+                min-height: 297mm !important; /* يحافظ على شكل A4 على الأقل */
                 max-width: none !important;
                 max-height: none !important;
-                min-height: auto !important;
                 margin: 0 !important; 
                 box-shadow: none; 
                 border: 2px solid var(--blue) !important;
@@ -338,7 +361,7 @@
         <div>تاريخ الإنشاء: <span id="creation-date">---</span></div>
       </div>
       <div class="brand-wrap">
-        <img src="https://raw.githubusercontent.com/LAZUBOT/elzoneform/refs/heads/run/src/img/logoalwatani.png" alt="الوطني" class="brand-logo" id="brand-logo" />
+        <img src="https://raw.githubusercontent.com/LAZUBOT/elzoneform/refs/heads/print/src/img/logoalwatani.png" alt="الوطني" class="brand-logo" id="brand-logo" />
         <span class="brand-fallback" id="brand-fallback">الوطني للإنترنت</span>
       </div>
     </div>
@@ -409,7 +432,7 @@
         <div class="footer-row">
           <label>التوقيع:</label>
           <div class="line signature-line">
-            <img id="sales-signature" class="signature-image" alt="توقيع موظف المبيعات" src="https://raw.githubusercontent.com/LAZUBOT/elzoneform/run/src/img/sing/wz.png" />
+            <img id="sales-signature" class="signature-image" alt="توقيع موظف المبيعات" src="https://raw.githubusercontent.com/LAZUBOT/elzoneform/print/src/img/sig/wz.png" />
             <span id="sales-signature-fallback" class="signature-fallback" style="display:none;">واثق زياد</span>
           </div>
         </div>
@@ -448,38 +471,56 @@
     // ==========================================
     // 2. جلب وتجهيز البيانات (Data Fetching / Generation)
     // ==========================================
+    
+    // دالة فك التشفير للأسماء المخفية مع إصلاح خطأ التعبئة والتجاوز الآمن
+    const decryptName = (encoded) => {
+      try {
+        let padded = encoded;
+        // التأكد من أن طول النص المشفر متوافق مع خوارزمية Base64
+        while (padded.length % 4 !== 0) {
+          padded += '=';
+        }
+        return decodeURIComponent(atob(padded));
+      } catch (error) {
+        // تم استبدال الكونسول بإرجاع مجهول لمنع تعطل الكود بأكمله
+        return "مجهول";
+      }
+    };
+
     const ZoneContractor = {
-      alsultan: {ranges: [[7001]], name: 'AL-Sultan Compound'},
-      alfirdous: {ranges: [[7061]], name: 'Al-Firdous Complex'},
-      bayti: {ranges: [[7020]], name: 'Bayti compound'},
-      dreamcity: {ranges: [[7120]], name: 'Dream City'},
-      elsalah: {ranges: [[163, 167], [176, 177], [185, 187], [189, 190], [209, 211], [213, 215], [219], [283, 287], [296, 297], [304], [308, 312], [315]], name: 'EL-Salah aldin'},
-      englishv: {ranges: [[7010]], name: 'English Village'},
-      holandian: {ranges: [[7031]], name: 'Holandian Village'},
-      jawharat: {ranges: [[7071, 7072]], name: 'Jawharat Tikrit'},
-      tiba1: {ranges: [[7150]], name: 'Tiba 1'},
-      aryanm: {ranges: [[217], [220, 221], [226], [235, 237]], name: 'اريان مصطفى امين زنكنه'},
-      ismailq: {ranges: [[160]], name: 'اسماعيل قيس توفيق سلمان'},
-      husaina: {ranges: [[136], [140], [143], [155], [159], [162]], name: 'حسين عصام عمر قادر'},
-      khairallahj: {ranges: [[238], [241], [245], [247, 248]], name: 'خيرالله جهاد سليمان عبدالله'},
-      zaidh: {ranges: [[45, 46], [48], [51, 66], [68], [70], [72, 75], [77, 85], [87], [89, 97], [100, 102], [256]], name: 'زيد حاتم'},
-      saadibr: {ranges: [[1], [4], [18], [21, 23], [26], [33], [35, 36], [39, 43], [99], [103], [243], [246], [251]], name: 'سعد ابراهيم محمد عبدالله'},
-      sabahm: {ranges: [[305, 307]], name: 'صباح مثنى صباح'},
-      alihm: {ranges: [[157]], name: 'علي حسين محمد رشيد'},
-      alimk: {ranges: [[2, 3], [5], [7, 13], [16], [20], [25], [27], [29], [31], [34], [37, 38], [44], [98], [145, 146], [156], [158], [231, 233]], name: 'علي مخلد رديف طالب'},
-      ammart: {ranges: [[168, 175], [178, 184], [188], [191], [218], [222, 225], [227, 230], [234]], name: 'عمار ثامر حسن العاصي'},
-      ammarm: {ranges: [[239, 240], [242], [244], [249, 250], [252]], name: 'عمار مزاحم علوان حسين'},
-      ghasans: {ranges: [[129, 134], [137, 139], [141, 142], [144], [148, 153], [216]], name: 'غسان سلطان كلو جمعة'},
-      mohameedw: {ranges: [[154], [278, 282]], name: 'محمد وادي شكور محمد'},
-      nabilj: {ranges: [[128], [135], [147]], name: 'نبيل جاووش'},
-      honarn: {ranges: [[161]], name: 'هونر نامق محمود'},
-      yaserl: {ranges: [[192, 207]], name: 'ياسر لطيف عبد محمود'},
+      alsultan: {ranges: [[7001]], name: 'QUwtU3VsdGFuJTIwQ29tcG91bmQ='},
+      alfirdous: {ranges: [[7061]], name: 'QWwtRmlyZG91cyUyMENvbXBsZXg='},
+      bayti: {ranges: [[7020]], name: 'QmF5dGklMjBjb21wb3VuZA=='},
+      dreamcity: {ranges: [[7120]], name: 'RHJlYW0lMjBDaXR5'},
+      elsalah: {ranges: [[163, 167], [176, 177], [185, 187], [189, 190], [209, 211], [213, 215], [219], [283, 287], [296, 297], [304], [308, 312], [315]], name: 'RUwtU2FsYWglMjBhbGRpbg=='},
+      englishv: {ranges: [[7010]], name: 'RW5nbGlzaCUyMFZpbGxhZ2U='},
+      holandian: {ranges: [[7031]], name: 'SG9sYW5kaWFuJTIwVmlsbGFnZQ=='},
+      jawharat: {ranges: [[7071, 7072]], name: 'SmF3aGFyYXQlMjBUaWtyaXQ='},
+      tiba1: {ranges: [[7150]], name: 'VGliYSUyMDE='},
+      aryanm: {ranges: [[217], [220, 221], [226], [235, 237]], name: 'JUQ4JUE3JUQ4JUIxJUQ5JThBJUQ4JUE3JUQ5JTg2JTIwJUQ5JTg1JUQ4JUI1JUQ4JUI3JUQ5JTgxJUQ5JTg5JTIwJUQ4JUE3JUQ5JTg1JUQ5JThBJUQ5JTg2JTIwJUQ4JUIyJUQ5JTg2JUQ5JTgzJUQ5JTg2JUQ5JTg3'},
+      ismailq: {ranges: [[160]], name: 'JUQ4JUE3JUQ4JUIzJUQ5JTg1JUQ4JUE3JUQ4JUI5JUQ5JThBJUQ5JTg0JTIwJUQ5JTgyJUQ5JThBJUQ4JUIzJTIwJUQ4JUFBJUQ5JTg4JUQ5JTgxJUQ5JThBJUQ5JTgyJTIwJUQ4JUIzJUQ5JTg0JUQ5JTg1JUQ4JUE3JUQ5JTg2'},
+      husaina: {ranges: [[136], [140], [143], [155], [159], [162]], name: 'JUQ4JUFEJUQ4JUIzJUQ5JThBJUQ5JTg2JTIwJUQ4JUI5JUQ4JUI1JUQ4JUE3JUQ5JTg1JTIwJUQ4JUI5JUQ5JTg1JUQ4JUIxJTIwJUQ5JTgyJUQ4JUE3JUQ4JUFGJUQ4JUIx'},
+      khairallahj: {ranges: [[238], [241], [245], [247, 248]], name: 'JUQ4JUFFJUQ5JThBJUQ4JUIxJUQ4JUE3JUQ5JTg0JUQ5JTg0JUQ5JTg3JTIwJUQ4JUFDJUQ5JTg3JUQ4JUE3JUQ4JUFGJTIwJUQ4JUIzJUQ5JTg0JUQ5JThBJUQ5JTg1JUQ4JUE3JUQ5JTg2JTIwJUQ4JUI5JUQ4JUE4JUQ4JUFGJUQ4JUE3JUQ5JTg0JUQ5JTg0JUQ5JTg3'},
+      zaidh: {ranges: [[45, 46], [48], [51, 66], [68], [70], [72, 75], [77, 85], [87], [89, 97], [100, 102], [256]], name: 'JUQ4JUIyJUQ5JThBJUQ4JUFGJTIwJUQ4JUFEJUQ4JUE3JUQ4JUFBJUQ5JTg1'},
+      saadibr: {ranges: [[1], [4], [18], [21, 23], [26], [33], [35, 36], [39, 43], [99], [103], [243], [246], [251]], name: 'JUQ4JUIzJUQ4JUI5JUQ4JUFGJTIwJUQ4JUE3JUQ4JUE4JUQ4JUIxJUQ4JUE3JUQ5JTg3JUQ5JThBJUQ5JTg1JTIwJUQ5JTg1JUQ4JUFEJUQ5JTg1JUQ4JUFGJTIwJUQ4JUI5JUQ4JUE4JUQ4JUFGJUQ4JUE3JUQ5JTg0JUQ5JTg0JUQ5JTg3'},
+      sabahm: {ranges: [[305, 307]], name: 'JUQ4JUI1JUQ4JUE4JUQ4JUE3JUQ4JUFEJTIwJUQ5JTg1JUQ4JUFCJUQ5JTg2JUQ5JTg5JTIwJUQ4JUI1JUQ4JUE4JUQ4JUE3JUQ4JUFE'},
+      alihm: {ranges: [[157]], name: 'JUQ4JUI5JUQ5JTg0JUQ5JThBJTIwJUQ4JUFEJUQ4JUIzJUQ5JThBJUQ5JTg2JTIwJUQ5JTg1JUQ4JUFEJUQ5JTg1JUQ4JUFGJTIwJUQ4JUIxJUQ4JUI0JUQ5JThBJUQ4JUFG'},
+      alimk: {ranges: [[2, 3], [5], [7, 13], [16], [20], [25], [27], [29], [31], [34], [37, 38], [44], [98], [145, 146], [156], [158], [231, 233]], name: 'JUQ4JUI5JUQ5JTg0JUQ5JThBJTIwJUQ5JTg1JUQ4JUFFJUQ5JTg0JUQ4JUFGJTIwJUQ4JUIxJUQ4JUFGJUQ5JThBJUQ5JTgxJTIwJUQ4JUI3JUQ4JUE3JUQ5JTg0JUQ4JUE4'},
+      ammart: {ranges: [[168, 175], [178, 184], [188], [191], [218], [222, 225], [227, 230], [234]], name: 'JUQ4JUI5JUQ5JTg1JUQ4JUE3JUQ4JUIxJTIwJUQ4JUFCJUQ4JUE3JUQ5JTg1JUQ4JUIxJTIwJUQ4JUFEJUQ4JUIzJUQ5JTg2JTIwJUQ4JUE3JUQ5JTg0JUQ4JUI5JUQ4JUE3JUQ4JUI1JUQ5JThB'},
+      ammarm: {ranges: [[239, 240], [242], [244], [249, 250], [252]], name: 'JUQ4JUI5JUQ5JTg1JUQ4JUE3JUQ4JUIxJTIwJUQ5JTg1JUQ4JUIyJUQ4JUE3JUQ4JUFEJUQ5JTg1JTIwJUQ4JUI5JUQ5JTg0JUQ5JTg4JUQ4JUE3JUQ5JTg2JTIwJUQ4JUFEJUQ4JUIzJUQ5JThBJUQ5JTg2'},
+      ghasans: {ranges: [[129, 134], [137, 139], [141, 142], [144], [148, 153], [216]], name: 'JUQ4JUJBJUQ4JUIzJUQ4JUE3JUQ5JTg2JTIwJUQ4JUIzJUQ5JTg0JUQ4JUI3JUQ4JUE3JUQ5JTg2JTIwJUQ5JTgzJUQ5JTg0JUQ5JTg4JTIwJUQ4JUFDJUQ5JTg1JUQ4JUI5JUQ4JUE5'},
+      // تم إصلاح التشفير التالف هنا من JUQ5JTg8 إلى JUQ5JTg4
+      mohameedw: {ranges: [[154], [278, 282]], name: 'JUQ5JTg1JUQ4JUFEJUQ5JTg1JUQ4JUFGJTIwJUQ5JTg4JUQ4JUE3JUQ4JUFGJUQ5JThBJTIwJUQ4JUI0JUQ5JTgzJUQ5JTg4JUQ4JUIxJTIwJUQ5JTg1JUQ4JUFEJUQ5JTg1JUQ4JUFG'},
+      nabilj: {ranges: [[128], [135], [147]], name: 'JUQ5JTg2JUQ4JUE4JUQ5JThBJUQ5JTg0JTIwJUQ4JUFDJUQ4JUE3JUQ5JTg4JUQ5JTg4JUQ4JUI0'},
+      honarn: {ranges: [[161]], name: 'JUQ5JTg3JUQ5JTg4JUQ5JTg2JUQ4JUIxJTIwJUQ5JTg2JUQ4JUE3JUQ5JTg1JUQ5JTgyJTIwJUQ5JTg1JUQ4JUFEJUQ5JTg1JUQ5JTg4JUQ4JUFG'},
+      yaserl: {ranges: [[192, 207]], name: 'JUQ5JThBJUQ4JUE3JUQ4JUIzJUQ4JUIxJTIwJUQ5JTg0JUQ4JUI3JUQ5JThBJUQ5JTgxJTIwJUQ4JUI5JUQ4JUE4JUQ4JUFGJTIwJUQ5JTg1JUQ4JUFEJUQ5JTg1JUQ5JTg4JUQ4JUFG'},
     };
 
     function generateZones() {
       const generated = [];
       for (const key in ZoneContractor) {
-        const contractor = ZoneContractor[key].name;
+        // يتم فك التشفير هنا تلقائياً أثناء توليد الكابينات
+        const contractor = decryptName(ZoneContractor[key].name);
         const ranges = ZoneContractor[key].ranges;
         
         for (const range of ranges) {
@@ -722,7 +763,7 @@
       const agentSignFallback = document.getElementById('agent-signature-fallback');
 
       if (contractor) {
-        setupSignatureImage(agentSign, agentSignFallback, `https://raw.githubusercontent.com/LAZUBOT/elzoneform/run/src/img/sing/${encodedContractor}.png`, contractor);
+        setupSignatureImage(agentSign, agentSignFallback, `https://raw.githubusercontent.com/LAZUBOT/elzoneform/print/src/img/sig/${encodedContractor}.png`, contractor);
       }
     }
 
@@ -760,7 +801,7 @@
         const img = document.getElementById('agent-signature');
         const val = e.target.value.trim();
         if (val) {
-          setupSignatureImage(img, fallback, `https://raw.githubusercontent.com/LAZUBOT/elzoneform/run/src/img/sing/${encodeURIComponent(val)}.png`, val);
+          setupSignatureImage(img, fallback, `https://raw.githubusercontent.com/LAZUBOT/elzoneform/print/src/img/sig/${encodeURIComponent(val)}.png`, val);
         } else {
           img.style.display = 'none';
           fallback.style.display = 'inline-block';
@@ -773,7 +814,7 @@
         const img = document.getElementById('sales-signature');
         const val = e.target.value.trim();
         if (val) {
-          const src = val === 'واثق زياد' ? 'https://raw.githubusercontent.com/LAZUBOT/elzoneform/run/src/img/sing/wz.png' : `https://raw.githubusercontent.com/LAZUBOT/elzoneform/run/src/img/sing/${encodeURIComponent(val)}.png`;
+          const src = val === 'واثق زياد' ? 'https://raw.githubusercontent.com/LAZUBOT/elzoneform/print/src/img/sig/wz.png' : `https://raw.githubusercontent.com/LAZUBOT/elzoneform/print/src/img/sig/${encodeURIComponent(val)}.png`;
           setupSignatureImage(img, fallback, src, val);
         } else {
           img.style.display = 'none';
@@ -784,7 +825,7 @@
       
       const salesNameInput = document.getElementById('sales-name');
       if(salesNameInput && salesNameInput.value === 'واثق زياد') {
-         setupSignatureImage(document.getElementById('sales-signature'), document.getElementById('sales-signature-fallback'), 'https://raw.githubusercontent.com/LAZUBOT/elzoneform/run/src/img/sing/wz.png', 'واثق زياد');
+         setupSignatureImage(document.getElementById('sales-signature'), document.getElementById('sales-signature-fallback'), 'https://raw.githubusercontent.com/LAZUBOT/elzoneform/print/src/img/sig/wz.png', 'واثق زياد');
       }
     }
 
