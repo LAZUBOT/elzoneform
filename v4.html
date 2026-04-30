@@ -939,7 +939,7 @@
 
     // تعديل إضافة الصفوف الافتراضية
     function initDefaults() {
-      for (let i = 0; i < 12; i++) addRow(TABLE_IDS.expansion);
+      for (let i = 0; i < 9; i++) addRow(TABLE_IDS.expansion);
       for (let i = 0; i < 5; i++) addRow(TABLE_IDS.poles);
     }
 
@@ -953,7 +953,7 @@
       if (Array.isArray(savedData.expansion) && savedData.expansion.length > 0) {
         savedData.expansion.forEach((row) => addRow(TABLE_IDS.expansion, row));
       } else {
-        for (let i = 0; i < 12; i++) addRow(TABLE_IDS.expansion);
+        for (let i = 0; i < 9; i++) addRow(TABLE_IDS.expansion);
       }
 
       if (Array.isArray(savedData.poles) && savedData.poles.length > 0) {
